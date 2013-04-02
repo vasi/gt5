@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 version=1.4.0
 
 #HTML-colours: ---------------------------------------------------------------
@@ -22,7 +22,7 @@ TEXT=grey      #plaintext
 
 unset missing
 which which &> /dev/null || { echo "ERROR: 'which' not found"; exit; }
-for bin in cat cp date du grep gzip head ls mkdir mv rm sed sort tee touch; do
+for bin in cat cp date gdu grep gzip head ls mkdir mv rm sed sort tee touch; do
   [ "$(which "$bin")" ] || missing="$missing $bin"
 done; [ "$missing" ] && {
   echo "binaries are missing:"
@@ -120,7 +120,7 @@ gt5_help() {
 
   echo "Syntax: gt5 [ dir | file | dir file | file file2 ] [options]"
   echo "     dir           the directory you want to check for space used"
-  echo "     file/file2    existing du-logs (du -akx \$DIR #gz/bz2/plain)"
+  echo "     file/file2    existing du-logs (gdu -akx \$DIR #gz/bz2/plain)"
   echo "   --cut-at float  don't show files below 'float'% of its parent,"
   echo "                   default is $CUT_AT, use values between 0.01 and 30"
   echo "   --diff-dir d    use dir d to store diffs between runs [$(gt5_replace "$DDIR" "$HOME/" "~/")]"
@@ -129,7 +129,7 @@ gt5_help() {
   echo "   --max-depth i   ignore anything deeper than i directories [$MAX_DEPTH]"
   echo "   --max-lines i   only consider the i biggest files [$ML]"
   echo "   --no-diffs      use this if you really do not want diffs"
-  echo "   --save-as file  DEPRECATED, use 'du', see manpage"
+  echo "   --save-as file  DEPRECATED, use 'gdu', see manpage"
   echo "   --save-state    overwrite a previous '--discard'"
   echo "   --with-mounts   also look below mountpoints"
   exit
@@ -228,7 +228,7 @@ done
 [ "$CD" ] && cd "$OLDPWD"
 
 [ "$SAVE_DU_AS" ] && {
-  du -ak$X 2> /dev/null | grep -v ^0 | gzip > "$SAVE_DU_AS-$(date +%y%m%d-%H%M).gz"
+  gdu -ak$X 2> /dev/null | grep -v ^0 | gzip > "$SAVE_DU_AS-$(date +%y%m%d-%H%M).gz"
   exit
 }
 
@@ -254,22 +254,20 @@ GENERIC_STORE="$DDIR/$(gt5_replace_all "$GENERIC_STORE" "/" "_,")"
 
 }
 
-[ "$F1" ] && { DATE=$(date -r "$F1"); SINCE=$(date -r "$F1" +%s); }
+[ "$F1" ] && { DATE=$(gdate -r "$F1"); SINCE=$(gdate -r "$F1" +%s); }
 [ "$CD" ] && P="$HOSTNAME:$PWD" || P="file: $F1"
 [ -z "$CD$F2" -o -z "$F1" ] && DIFFS=0
 [ "$CD" ] || unset LINK_FILES SAVE_DU
 
 #can du handle depths?
-DEPTH="$(du --help 2>&1 | "$AWK" '
-  /depth/{sub(/^[^-]*/,""); sub(/[N ].*/,""); print; exit}
-')$((MAX_DEPTH+1))"
+DEPTH="-d$MAX_DEPTH"
 
 {
 
   ID=0
   [ "$CD" ] && { SECONDS=0
     echo -n "processing \"$(gt5_replace "$PWD" "$HOME/" "~/")\", please be patient ... " 1>&2
-    du -ak$X $DEPTH 2> /dev/null | grep -v ^0 | tee "$TMP/this" | sed "s,^,$ID ,"
+    gdu -ak$X $DEPTH 2> /dev/null | grep -v ^0 | tee "$TMP/this" | sed "s,^,$ID ,"
     ID=$((ID+1)); echo "done ${SAVE:+[${SECONDS}s]}" 1>&2
   }
 
