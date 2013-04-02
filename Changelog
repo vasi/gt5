@@ -1,0 +1,75 @@
+29.08.2007 version 1.4.0
+
+    * Changed package naming syntax
+    * modified gt5 to run with plain awk
+    * added workaround if mktemp is missing
+
+08.02.2007 version 1.3d
+
+    * just some minor fixes in the manpage
+
+24.01.2007 version 1.3c
+
+    * added 'charset' to html header to fix UTF-8 encoding problem,
+      $LANG is read for charset, use GT5_CHARSET to force another
+
+15.06.2006 version 1.3b
+
+    * fixed filename escaping in two trap statements
+
+09.05.2006 version 1.3a
+
+    * fixed seconds in 'last check / time ago' - statement
+    * fixed hidden feature to download/compile a textbrowser
+      (gt5 refused to run without a textbrowser installed)
+
+08.12.2005 version 1.3
+
+    * added diffs: gt5 shows where diskspace has been occupied since last run
+    * added colors to show bigger, smaller and new files at the first sight
+      (in case you use a textbrowser that honors a document's coloring)
+    * gt5 now can also show du-logs generated with 'du -ak /some/dir'
+    * removed support for w3m, (see manpage)
+    * wrote a manpage for gt5
+
+17.11.2005 version 1.2f
+
+    * added fallback to use lynx/w3m
+      (order: elinks links links2 lynx w3m)
+
+15.11.2005 version 1.2e
+
+    * fixed permissions for gawk/links if build systemwide
+    * added --get-elinks and --get-links2, as requested
+    * changed the default to ignore mountet filesystems
+    * added switch --with-mounts for old behaviour
+
+15.09.2005 version 1.2d
+
+    * added Makefile to be able to install gt5 via toast
+    * added LC_ALL=POSIX to override system environment
+
+20.08.2005 version 1.2c
+
+    * improved cutting technics: --cut-at / --max-depth / --max-lines
+    * more reliable removing of temporary files trough 'trap'
+    * fixed sort order of links-versions within --get-links
+    * check for the availability of gawk
+    * better escaping of filenames 
+
+14.04.2005 version 1.1
+
+    * Fixed a bug triggered by reiserfs where directories can have zero size:
+      If only one subdirectory exists, parent and child have equal size. They
+      were sorted incorrectly, which rendered the parent 'unbrowseable'.
+    * Fixed a bug triggered by HTML anchors being caseinsensitive. So directo-
+      ries whose names only differ in case were (of course) indistinguishable.
+    * renamed '--keep-as' to '--save-as' as I allways mix them up. In fact
+      both switches are accepted.
+    * temporary files are now compressed using gzip to minimize diskusage
+
+30.10.2004 version 1.0
+
+    * first public release (gt5 is feature complete)
+    * I used it on my own for several weeks now
+

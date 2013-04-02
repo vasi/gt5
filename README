@@ -1,0 +1,107 @@
+
+                  "gt5" or "where has my diskspace gone?"
+               \___________________________________________/
+
+Overview
+~~~~~~~~
+   Years ago, I was proud to own an 80MHz, 16MB RAM PC with a huge 512MB
+   harddisk. But even on this incredibly huge harddisk, my diskspace seemed
+   to disappear over time. So I wrote a little tool to find out where all my
+   diskspace had gone: I called it "gettree", as it showed all files in a
+   directory and also calculated the size of subtrees.  Over the years, the
+   OS I used changed, but the problem stayed. Using Linux, there are some
+   tools to deal with it, but I couldn't find anything that was clearly laid
+   out, intuitive to browse, and doesn't need X-Windows.
+
+Features
+~~~~~~~~
+   * displays the diskspace used by files and directories within a directory
+   * displays what has happened since gt5 last ran (see screenshot below)
+   * optionally provides links to the files, so you can also browse them
+   * displays entries with their size and the percentage of their parent
+   * omission of small files/directories to keep the results readable
+   * easy browsing through subdirectories, using the cursor-keys 
+
+Implementation
+~~~~~~~~~~~~~~
+   I tried different ways to do the job and settled on a small shell-script:
+      * highly 'portable', as it only depends on some GNU-utilities
+      * common textbrowsers are used to navigate through the results
+      * runs on console, xterm or remotely over ssh
+
+Screenshot
+~~~~~~~~~~        (much more impressive if used with colors!)
+   __________________________________________________________________________
+  |                                                                (p1 of 2) |
+  | gt5 v1.4.0 (pearl:/usr/src/linux):   [cut:0.1% depth:5 lines:10000]      |
+  |  last check was on Thu Dec  7 20:34:17 CET 2005 (i.e. 0d, 00:47:19 ago)  |
+  |                                                                          |
+  |     ----------------------------------------------------------------     |
+  |                                                                          |
+  | ./:   [442MB in 40 files or directories]  +29MB                          |
+  |                                                                          |
+  |  128MB [29.02%] ./drivers/  +21MB                                        |
+  |   63MB [14.35%] ./arch/  +17MB                                           |
+  |   52MB [11.79%] ./shrunken_testfile_1  -39MB                             |
+  |   42MB [ 9.58%] ./include/  +8.0KB                                       |
+  |   41MB [ 9.29%] ./shrunken_testfile_2  -22MB                             |
+  |   35MB [ 7.98%] ./fs/  +16MB                                             |
+  |   20MB [ 4.49%] ./net/  +8.5MB                                           |
+  |   19MB [ 4.41%] ./sound/  +4.4MB                                         |
+  |  8.9MB [ 2.03%] ./Documentation/                                         |
+  |  4.8MB [ 1.09%] ./vmlinux  new                                           |
+  |  4.8MB [ 1.09%] ./.tmp_vmlinux2  new                                     |
+  |  4.6MB [ 1.05%] ./.tmp_vmlinux1  new                                     |
+  |  2.9MB [ 0.65%] ./kernel/  +1.5MB                                        |
+  |  2.1MB [ 0.48%] ./crypto/  +1.5MB                                        |
+  |                                                                          |
+  |http://gt5.sourceforge.net/sample.html#914________________________________|
+
+Navigation
+~~~~~~~~~~
+   If you are familiar with textbrowsers there is nothing to say: gt5 produces
+   an HTML file; go browse it. Below are the most important keys for gt5 used
+   with links/links2/elinks/lynx:
+
+                    .---------------------------------------------------.
+                    |   browsing in general   |   meaning in gt5        |
+   ======================================================================
+   | Cursor Left    | go back                 | go one directory up     |
+   |----------------|-------------------------|-------------------------|
+   | Cursor Right   | follow link             | open selected directory |
+   |----------------|-------------------------|-------------------------|
+   | Cursor Up/Down | go to link above/below  | move Cursor Up/Down     |
+   |----------------|-------------------------|-------------------------|
+   | Insert/Delete  | scroll page up/down     | scroll page up/down     |
+   |----------------|-------------------------|-------------------------|
+   | Ctrl-C         | quit textbrowser        | quit gt5                |
+   '--------------------------------------------------------------------'
+
+Usage
+~~~~~
+
+   Syntax: gt5 [ dir | file | dir file | file file2 ] [options]
+        dir           the directory you want to check for space used
+        file/file2    existing du-logs (du -akx $DIR #gz/bz2/plain)
+      --cut-at float  don't show files below 'float'% of its parent,
+                      default is 0.1, use values between 0.01 and 30
+      --diff-dir d    use dir d to store diffs between runs [~/.gt5-diffs]
+      --discard       do not save this one for diffs, discard it
+      --link-files    insert links to files for direct access
+      --max-depth i   ignore anything deeper than i directories [5]
+      --max-lines i   only consider the i biggest files [10000]
+      --no-diffs      use this if you really do not want diffs
+      --save-as file  DEPRECATED, use 'du', see manpage
+      --save-state    overwrite a previous '--discard'
+      --with-mounts   also look below mountpoints
+
+Download
+~~~~~~~~
+   Files are hosted on SourceForge.net: (gt5 is released under GPL.)
+   http://sourceforge.net/project/showfiles.php?group_id=122114
+
+Contact
+~~~~~~~
+   If you have any question/suggestion, feel free to contact me via
+   http://sourceforge.net/users/tsattler/
+
